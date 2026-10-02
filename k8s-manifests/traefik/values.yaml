@@ -1,0 +1,31 @@
+# Traefik на мастере: порт 80 хоста пробрасывается в под (hostPort)
+deployment:
+  replicas: 1
+
+nodeSelector:
+  kubernetes.io/hostname: k8s-master-01
+
+# Мастер имеет taint control-plane:NoSchedule, поэтому нужен toleration
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+
+ports:
+  web:
+    port: 8000
+    hostPort: 80
+
+service:
+  type: ClusterIP
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi

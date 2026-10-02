@@ -1,0 +1,25 @@
+[all]
+%{ for idx, ip in masters_external ~}
+k8s-master-0${idx + 1} ansible_host=${ip} ip=${masters_internal[idx]} ansible_user=ubuntu
+%{ endfor ~}
+%{ for idx, ip in workers_external ~}
+k8s-worker-0${idx + 1} ansible_host=${ip} ip=${workers_internal[idx]} ansible_user=ubuntu
+%{ endfor ~}
+
+[kube_control_plane]
+k8s-master-01
+
+[etcd]
+k8s-master-01
+
+[kube_node]
+%{ for idx, ip in workers_external ~}
+k8s-worker-0${idx + 1}
+%{ endfor ~}
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+calico_rr

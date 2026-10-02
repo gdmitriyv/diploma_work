@@ -1,0 +1,91 @@
+# =====================================================================
+# kube-prometheus-stack (chart 91.8.2) для кластера из 3 ВМ.
+# Grafana: http://62.84.115.226/grafana/ (через Traefik на мастере)
+# и запасной вход по NodePort 30080.
+# =====================================================================
+prometheusOperator:
+  enabled: true
+  resources:
+    requests:
+      memory: "50Mi"
+      cpu: "20m"
+    limits:
+      memory: "100Mi"
+      cpu: "50m"
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "50m"
+      limits:
+        memory: "1Gi"
+        cpu: "200m"
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        memory: "50Mi"
+        cpu: "20m"
+      limits:
+        memory: "100Mi"
+        cpu: "50m"
+
+prometheus-node-exporter:
+  resources:
+    requests:
+      memory: "30Mi"
+      cpu: "10m"
+    limits:
+      memory: "50Mi"
+      cpu: "30m"
+
+kube-state-metrics:
+  resources:
+    requests:
+      memory: "50Mi"
+      cpu: "10m"
+    limits:
+      memory: "100Mi"
+      cpu: "50m"
+
+grafana:
+  enabled: true
+  resources:
+    requests:
+      memory: "100Mi"
+      cpu: "50m"
+    limits:
+      memory: "300Mi"
+      cpu: "200m"
+
+  # Запасной вход напрямую через ноду (порт открыт в группе безопасности)
+  service:
+    type: NodePort
+    nodePort: 30080
+
+  # Основной вход: порт 80 через Traefik, путь /grafana
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    path: /grafana
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+
+  # Grafana работает из подпути, адрес должен совпадать с внешним IP мастера
+  grafana.ini:
+    server:
+      root_url: "http://62.84.115.226/grafana/"
+      serve_from_sub_path: true
+
+  # Проверки готовности с учётом подпути
+  readinessProbe:
+    httpGet:
+      path: /grafana/api/health
+  livenessProbe:
+    httpGet:
+      path: /grafana/api/health

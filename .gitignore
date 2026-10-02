@@ -1,0 +1,30 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+tfplan
+crash.log
+
+# Ключи и секреты
+*.pem
+*.key
+key.json
+*-key.json
+id_ed25519*
+id_rsa*
+.env
+
+# Резервные копии и временные файлы
+*.bak
+
+# Python-окружение и кэш
+venv/
+__pycache__/
+
+# Kubespray: клонируется отдельно, в репозиторий идёт только своя конфигурация
+kubespray-setup/kubespray/
+**/credentials/
+*.creds
+inventory.ini
