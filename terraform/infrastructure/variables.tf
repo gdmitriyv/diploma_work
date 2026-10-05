@@ -18,3 +18,8 @@ variable "default_zone" {
   default     = "ru-central1-a"
   description = "Default zone"
 }
+
+variable "ssh_public_key" {
+  type        = string
+  description = "Публичный SSH-ключ для доступа к ВМ"
+}

@@ -142,7 +142,7 @@ resource "yandex_compute_instance" "k8s_masters" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("/home/dgv/.ssh/id_ed25519.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   # ИСПРАВЛЕНО: новый образ в семействе не должен пересоздавать работающий кластер
@@ -185,7 +185,7 @@ resource "yandex_compute_instance" "k8s_workers" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("/home/dgv/.ssh/id_ed25519.pub")}"
+    ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 
   # ИСПРАВЛЕНО: новый образ в семействе не должен пересоздавать работающий кластер
