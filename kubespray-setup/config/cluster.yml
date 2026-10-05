@@ -1,0 +1,64 @@
+---
+# ==============================================================================
+# ЭТАП 1: ОРИГИНАЛЬНЫЙ СЦЕНАРИЙ СБОРКИ КЛАСТЕРА KUBESPRAY
+# ==============================================================================
+- name: Import original Kubespray installation core
+  ansible.builtin.import_playbook: playbooks/cluster.yml
+
+# ==============================================================================
+# ЭТАП 2: ДИНАМИЧЕСКАЯ IaC-АВТОМАТИЗАЦИЯ ВЫГРУЗКИ И НАСТРОЙКИ KUBECONFIG
+# ==============================================================================
+- name: IaC Automation | Export and auto-configure Kubeconfig for Localhost
+  hosts: kube_control_plane
+  gather_facts: false
+  become: true
+  vars:
+    # Отключаем интерактивную блокировку цифровых отпечатков SSH (StrictHostKeyChecking)
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=no"
+  tasks:
+    - name: Security Provisioning | Temporarily allow reading admin.conf
+      ansible.builtin.file:
+        path: /etc/kubernetes/admin.conf
+        mode: '0644'
+
+    - name: Data Delivery | Fetch admin.conf to netology-01 home directory
+      ansible.builtin.fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: ~/.kube/config
+        flat: yes
+
+    - name: Security Provisioning | Restore secure permissions on master node
+      ansible.builtin.file:
+        path: /etc/kubernetes/admin.conf
+        mode: '0600'
+
+    - name: Rights Management | Fix permissions for local kubeconfig on netology-01
+      delegate_to: localhost
+      become: false
+      ansible.builtin.file:
+        path: ~/.kube/config
+        mode: '0600'
+
+    - name: Dynamic IaC | Automatically replace internal Master IP with External Static IP
+      delegate_to: localhost
+      become: false
+      ansible.builtin.replace:
+        path: ~/.kube/config
+        regexp: 'https://.*:6443'
+        replace: 'https://62.84.115.226:6443'
+
+    - name: Verification | Clean local kubectl cache to avoid X509 conflicts
+      delegate_to: localhost
+      become: false
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - ~/.kube/cache/
+        - ~/.kube/http-cache/
+
+    - name: Triumph | Display validation message
+      delegate_to: localhost
+      become: false
+      ansible.builtin.debug:
+        msg: "IaC Automation Complete! Cluster is ready. Run 'kubectl get nodes' to verify."

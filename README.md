@@ -11,8 +11,9 @@
 | `k8s-manifests/monitoring` | Настройки kube-prometheus-stack (Prometheus, Alertmanager, Grafana) |
 | `k8s-manifests/traefik` | Настройки Ingress-контроллера Traefik |
 | `k8s-manifests/app` | Манифесты тестового приложения |
+| `kubespray-setup/config` | Конфигурация Kubespray: плейбук, group_vars, patches |
 
-Конфигурация Kubespray и репозиторий тестового приложения (`diploma-app`) добавляются отдельно.
+Конфигурация Kubespray: `kubespray-setup/config`. Тестовое приложение: https://github.com/gdmitriyv/diploma-app
 
 ## Адреса
 
