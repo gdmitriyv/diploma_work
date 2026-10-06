@@ -1,6 +1,6 @@
 # =====================================================================
 # kube-prometheus-stack (chart 91.8.2) для кластера из 3 ВМ.
-# Grafana: http://62.84.115.226/grafana/ (через Traefik на мастере)
+# Grafana: http://__MASTER_IP__/grafana/ (через Traefik на мастере)
 # и запасной вход по NodePort 30080.
 # =====================================================================
 prometheusOperator:
@@ -79,7 +79,7 @@ grafana:
   # Grafana работает из подпути, адрес должен совпадать с внешним IP мастера
   grafana.ini:
     server:
-      root_url: "http://62.84.115.226/grafana/"
+      root_url: "http://__MASTER_IP__/grafana/"
       serve_from_sub_path: true
 
   # Проверки готовности с учётом подпути

@@ -21,7 +21,7 @@ spec:
       containers:
         - name: nginx-app
           # Реестр открыт для анонимного скачивания (public_puller в Terraform)
-          image: cr.yandex/crp7nu76gnb646d9a9ho/nginx-app:v1
+          image: cr.yandex/__REGISTRY_ID__/nginx-app:__TAG__
           ports:
             - containerPort: 80
           readinessProbe:

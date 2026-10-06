@@ -197,15 +197,6 @@ resource "yandex_compute_instance" "k8s_workers" {
 # ==============================================================================
 # 4. АВТОМАТИЧЕСКАЯ ГЕНЕРАЦИЯ ИНВЕНТАРЯ ДЛЯ KUBESPRAY
 # ==============================================================================
-resource "local_file" "kubespray_inventory" {
-  content = templatefile("${path.module}/inventory.tftpl", {
-    masters_external = [yandex_compute_instance.k8s_masters.network_interface.0.nat_ip_address],
-    masters_internal = [yandex_compute_instance.k8s_masters.network_interface.0.ip_address],
-    workers_external = yandex_compute_instance.k8s_workers[*].network_interface.0.nat_ip_address,
-    workers_internal = yandex_compute_instance.k8s_workers[*].network_interface.0.ip_address
-  })
-  filename = "${path.module}/../../kubespray-setup/kubespray/inventory/mycluster/inventory.ini"
-}
 
 # ==============================================================================
 # 5. РЕЕСТР КОНТЕЙНЕРОВ (YANDEX CONTAINER REGISTRY)
@@ -234,4 +225,16 @@ resource "yandex_container_registry_iam_binding" "public_puller" {
 output "container_registry_id" {
   value       = yandex_container_registry.diploma_registry.id
   description = "Идентификатор вашего сохраненного реестра"
+}
+
+# Содержимое inventory.ini для Kubespray:
+# terraform output -raw kubespray_inventory > <каталог kubespray>/inventory/mycluster/inventory.ini
+output "kubespray_inventory" {
+  description = "Инвентарь Kubespray"
+  value = templatefile("${path.module}/inventory.tftpl", {
+    masters_external = [yandex_compute_instance.k8s_masters.network_interface.0.nat_ip_address],
+    masters_internal = [yandex_compute_instance.k8s_masters.network_interface.0.ip_address],
+    workers_external = yandex_compute_instance.k8s_workers[*].network_interface.0.nat_ip_address,
+    workers_internal = yandex_compute_instance.k8s_workers[*].network_interface.0.ip_address
+  })
 }

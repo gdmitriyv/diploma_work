@@ -45,7 +45,7 @@
       ansible.builtin.replace:
         path: ~/.kube/config
         regexp: 'https://.*:6443'
-        replace: 'https://62.84.115.226:6443'
+        replace: 'https://{{ hostvars[inventory_hostname].ansible_host }}:6443'
 
     - name: Verification | Clean local kubectl cache to avoid X509 conflicts
       delegate_to: localhost
