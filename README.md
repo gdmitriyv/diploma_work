@@ -50,7 +50,7 @@ diploma-app ── Actions ──► build ──► образ в Container Reg
 
 Актуальный адрес мастера: `terraform -chdir=terraform/infrastructure output k8s_master_external_ip`. "Переменная, так как я отключил прерываемость только для сдачи VM в облаке"
 
-Скриншоты  terraform destroy
+terraform destroy и скрины инфраструктуры ДО удаления
 
 <img width="1188" height="494" alt="06  terraform destroy" src="https://github.com/user-attachments/assets/38723b8b-c8c2-4db9-a935-f8ff99580035" />
 <img width="1297" height="680" alt="05  kubectl get  pods До terraform destroy" src="https://github.com/user-attachments/assets/913d156b-e665-4dfd-b2fa-697509b8e57e" />
@@ -61,7 +61,7 @@ diploma-app ── Actions ──► build ──► образ в Container Reg
 <img width="1718" height="427" alt="01  До terraform destroy" src="https://github.com/user-attachments/assets/f911715b-56a6-475f-84b9-34704ad4d2b8" />
 <img width="1048" height="757" alt="07  terraform destroy" src="https://github.com/user-attachments/assets/b6202e20-9069-48c8-aa69-661e46a09391" />
 
-Скриншоты redeploy
+terraform apply, скриншоты после redeploy
 
 <img width="1754" height="803" alt="15 action git diploma work" src="https://github.com/user-attachments/assets/ed79844f-f59e-4ac9-b095-f41fea1fb536" />
 <img width="1813" height="951" alt="14 action git diploma app" src="https://github.com/user-attachments/assets/72215288-187b-49e4-ba4f-d98c5e093b0b" />
